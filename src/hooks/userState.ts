@@ -39,12 +39,9 @@ export function useUserState(): UserState {
     mutationFn: async () => {
       console.log('mutationFn');
     },
-    onSettled: async () => {
+    onSuccess: async () => {
       console.log('onSettled');
-      await queryClient.cancelQueries({
-        queryKey: ['userInfo'],
-      });
-      await queryClient.invalidateQueries({
+      queryClient.removeQueries({
         queryKey: ['userInfo'],
       });
       secureLocalStorage.removeItem(ACCESS_TOKEN);
