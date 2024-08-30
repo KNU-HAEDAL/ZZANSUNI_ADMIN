@@ -12,7 +12,7 @@ export interface UserState {
   user?: UserInfoModel;
   error: ApiError | null;
   login: (req:EmailLoginRequest) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 export function useUserState(): UserState {
@@ -35,18 +35,20 @@ export function useUserState(): UserState {
   //2. 실패 시 반환되는 에러의 타입
   //3. mutationFn에 전달되는 데이터의 타입(onSuccess, onError, onMutate, onSettled)
   //4. onMutate에서 반환되는 데이터의 타입. (onSuccess, onError, onSettled)에서 활용
-  const userMutation = useMutation<void, ApiError, void, void>({
+  const userMutation = useMutation<void>({
     mutationFn: async () => {
       console.log('mutationFn');
     },
-    onSuccess: async () => {
-      console.log('onSuccess');
+    onSettled: async () => {
+      console.log('onSettled');
       await queryClient.cancelQueries({
         queryKey: ['userInfo'],
       });
       await queryClient.invalidateQueries({
         queryKey: ['userInfo'],
       });
+      secureLocalStorage.removeItem(ACCESS_TOKEN);
+      secureLocalStorage.removeItem(REFRESH_TOKEN);
     }
   });
   const loginMutation = useMutation<
@@ -66,9 +68,7 @@ export function useUserState(): UserState {
 
   return {
     user: data,
-    logout: () => {
-      userMutation.mutate();
-    },
+    logout: userMutation.mutateAsync,
     login: async (req:EmailLoginRequest) => {
       await loginMutation.mutateAsync(req);
     },

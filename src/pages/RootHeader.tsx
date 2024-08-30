@@ -1,7 +1,6 @@
 import {Link, useNavigate} from "react-router-dom";
-import {useUserState} from "@/hooks/userState.ts";
-import secureLocalStorage from "react-secure-storage";
-import {ACCESS_TOKEN, REFRESH_TOKEN, ROUTE_PATH} from "@/const/data.ts";
+import {useUserState} from "@/hooks/userState.ts"
+import {ROUTE_PATH} from "@/const/data.ts";
 
 const menuItems = [
   {label: '대시보드', href: ROUTE_PATH.DASHBOARD_HOME},
@@ -10,7 +9,6 @@ const menuItems = [
   {label: '마이페이지', href: ROUTE_PATH.DASHBOARD_MY},
 ]
 
-export const RootHeaderHeight = '80px';
 
 export default function RootHeader() {
   return (
@@ -40,10 +38,8 @@ export default function RootHeader() {
 function UserMenu() {
   const navigate = useNavigate();
   const {user, logout, error} = useUserState();
-  function logoutButtonClick(){
-    logout();
-    secureLocalStorage.removeItem(ACCESS_TOKEN);
-    secureLocalStorage.removeItem(REFRESH_TOKEN);
+  async function logoutButtonClick(){
+    await logout();
     navigate(ROUTE_PATH.ROOT);
   }
 
