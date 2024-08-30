@@ -9,7 +9,7 @@ export interface CreateChallengeGroupRequest {
 }
 
 export interface ChallengeGroupPagingParams extends PagingRequest{
-  category: Category;
+  category?: Category;
 }
 
 

@@ -7,18 +7,23 @@ import {ApiError} from "@/api/ApiError.ts";
 import {useLocation} from "react-router-dom";
 import {CHALLENGE_GROUP} from "@/const/query.key.ts";
 
-export default function ChallengeGroupPage() {
+function usePageParams(): ChallengeGroupPagingParams{
   const {search} = useLocation();
   const searchParams = new URLSearchParams(search);
   const page = searchParams.get('p') ? parseInt(searchParams.get('p')!) : 0;
   const size = searchParams.get('s') ? parseInt(searchParams.get('s')!) : 20;
-  const category = searchParams.get('c') as Category || 'HEALTH';
-
-  const pagingReq: ChallengeGroupPagingParams = {
+  const category = searchParams.get('c') as Category
+  return {
     page,
     size,
-    category,
+    category
   }
+}
+
+
+export default function ChallengeGroupPage() {
+
+  const pagingReq: ChallengeGroupPagingParams = usePageParams();
 
   const {data} = useQuery<
     PagingResponse<ChallengeGroupModel>,

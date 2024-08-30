@@ -2,7 +2,7 @@ import axios from "axios";
 import secureLocalStorage from "react-secure-storage";
 import {ApiResponse} from "@/api/ApiResonpse.ts";
 import {ApiError} from "@/api/ApiError.ts";
-import {API_BASE_URL} from "@/const/data.ts";
+import {ACCESS_TOKEN, API_BASE_URL, REFRESH_TOKEN} from "@/const/data.ts";
 
 export const axiosClient = axios.create({
   baseURL: API_BASE_URL,
@@ -45,7 +45,7 @@ axiosClient.interceptors.response.use(
     const originalRequest = error.config;
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const refreshToken = secureLocalStorage.getItem('refreshToken');
+      const refreshToken = secureLocalStorage.getItem(REFRESH_TOKEN);
       if (!refreshToken) {
         return Promise.reject(error);
       }
@@ -60,12 +60,12 @@ axiosClient.interceptors.response.use(
       if (resp.ok) {
         console.log('토큰 재발급 성공');
         const res = await resp.json();
-        secureLocalStorage.setItem('accessToken', res.data.accessToken);
+        secureLocalStorage.setItem(ACCESS_TOKEN, res.data.accessToken);
         return axiosClient(originalRequest);
       }else{
         console.log('토큰 재발급 실패');
-        secureLocalStorage.removeItem('accessToken');
-        secureLocalStorage.removeItem('refreshToken');
+        secureLocalStorage.removeItem(ACCESS_TOKEN);
+        secureLocalStorage.removeItem(REFRESH_TOKEN);
         window.location.href = '/login';
       }
       return Promise.reject(error);

@@ -1,6 +1,7 @@
 import {Link, useNavigate} from "react-router-dom";
 import {useUserState} from "@/hooks/userState.ts";
-import {UserInfoModel} from "@/api/user/user.response.ts";
+import secureLocalStorage from "react-secure-storage";
+import {ACCESS_TOKEN, REFRESH_TOKEN} from "@/const/data.ts";
 
 const menuItems = [
   {label: '홈', href: '/dashboard'},
@@ -12,9 +13,6 @@ const menuItems = [
 export const RootHeaderHeight = '80px';
 
 export default function RootHeader() {
-  const {user} = useUserState();
-
-
   return (
     <header className="w-dvw h-[80px] items-center bg-white flex justify-center z-50 fixed">
       <div className="w-[1280px] h-full flex flex-row items-center">
@@ -31,7 +29,7 @@ export default function RootHeader() {
           ))}
         </nav>
         <div className="flex-grow"/>
-        <UserMenu user={user}/>
+        <UserMenu/>
       </div>
 
     </header>
@@ -39,24 +37,28 @@ export default function RootHeader() {
 }
 
 
-function UserMenu({user}: { user?: UserInfoModel }) {
+function UserMenu() {
   const navigate = useNavigate();
-  function loginButtonClick(){
-    navigate('/login');
+  const {user, logout, error} = useUserState();
+  function logoutButtonClick(){
+    logout();
+    secureLocalStorage.removeItem(ACCESS_TOKEN);
+    secureLocalStorage.removeItem(REFRESH_TOKEN);
+    navigate('/');
   }
 
 
-  if (!user) {
+  if (!user || error != null) {
     return (
       <div>
-        <Link to="/">로그인</Link>
+        <Link to="/login">로그인</Link>
       </div>
     )
   }
   return (
     <div>
       <img className="w-8 h-8 rounded-full overflow-hidden" src={user.profileImageUrl} alt=""/>
-      <button onClick={loginButtonClick}>
+      <button onClick={logoutButtonClick}>
         로그아웃
       </button>
     </div>
