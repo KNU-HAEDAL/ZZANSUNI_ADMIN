@@ -1,6 +1,8 @@
 import {Link, useNavigate} from "react-router-dom";
 import {useUserState} from "@/hooks/userState.ts"
 import {ROUTE_PATH} from "@/const/data.ts";
+import {UserInfoModel} from "@/api/user/user.response.ts";
+import {ApiError} from "@/api/ApiError.ts";
 
 const menuItems = [
   {label: '대시보드', href: ROUTE_PATH.DASHBOARD_HOME},
@@ -11,6 +13,16 @@ const menuItems = [
 
 
 export default function RootHeader() {
+  const {user, logout, error} = useUserState();
+  const navigate = useNavigate();
+
+  const clickedWhenNotLogin = (e:React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    alert('로그인이 필요한 서비스입니다.');
+    navigate(ROUTE_PATH.LOGIN);
+  }
+
+
   return (
     <header className="w-dvw h-[80px] items-center bg-white flex justify-center z-50 fixed">
       <div className="w-[1280px] h-full flex flex-row items-center">
@@ -21,24 +33,48 @@ export default function RootHeader() {
         <div className="w-[80px]"></div>
         <nav className="flex justify-between h-[27px] w-[400px]">
           {menuItems.map((item, index) => (
-            <Link to={item.href} key={index} className="text-[18px]">
-              {item.label}
-            </Link>
+            <MenuLink user={user} item={item} index={index} clickedWhenNotLogin={clickedWhenNotLogin}/>
           ))}
         </nav>
         <div className="flex-grow"/>
-        <UserMenu/>
+        <UserMenu user={user} error={error} logout={logout}/>
       </div>
-
     </header>
   )
 }
 
+interface MenuLinkProps {
+  user?: UserInfoModel;
+  item: { label: string, href: string };
+  index: number;
+  clickedWhenNotLogin: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+}
 
-function UserMenu() {
+function MenuLink({user, item, index, clickedWhenNotLogin}: MenuLinkProps) {
+  return (
+    user ?
+      <Link to={item.href} key={index} className="text-[18px]">
+        {item.label}
+      </Link>
+      :
+      <Link to={item.href} key={index} className="text-[18px]"
+            onClick={clickedWhenNotLogin}
+      >
+        {item.label}
+      </Link>
+  )
+}
+
+interface UserMenuProps {
+  user?: UserInfoModel;
+  logout: () => Promise<void>;
+  error: ApiError | null;
+}
+
+function UserMenu({user, logout, error}: UserMenuProps) {
   const navigate = useNavigate();
-  const {user, logout, error} = useUserState();
-  async function logoutButtonClick(){
+
+  async function logoutButtonClick() {
     await logout();
     navigate(ROUTE_PATH.ROOT);
   }
