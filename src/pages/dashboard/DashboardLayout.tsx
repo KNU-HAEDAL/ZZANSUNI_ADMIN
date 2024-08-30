@@ -25,7 +25,8 @@ export default function DashboardLayout() {
   }, []);
 
   useEffect(() => {
-    if(error) {
+    if(error != null) {
+      console.log(error, 'goto login');
       nav('/login');
     }
   }, [error]);

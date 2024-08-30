@@ -2,10 +2,9 @@ import {ChangeEventHandler, FormEventHandler, useState} from "react";
 import style from '../../../components/main/login.module.css';
 import {Link, useNavigate} from "react-router-dom";
 import BackButton from "../../../components/main/BackButton.tsx";
-import secureLocalStorage from "react-secure-storage";
-import {emailLogin} from "@/api/auth/auth.api.ts";
 import {ApiError} from "@/api/ApiError.ts";
 import {API_BASE_URL, KAKAO_AUTH_URL, NAVER_AUTH_URL} from "@/const/data.ts";
+import {useUserState} from "@/hooks/userState.ts";
 
 
 export default function LoginModal() {
@@ -17,17 +16,14 @@ export default function LoginModal() {
   const navigate = useNavigate();
 
 
+  const {login} = useUserState();
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     setMessage('');
     try {
       console.log(`${API_BASE_URL} is api`)
-      const response = await emailLogin({email, password});
-      console.log('token', response);
-      secureLocalStorage.setItem('accessToken', response.accessToken);
-      secureLocalStorage.setItem('refreshToken', response.refreshToken);
-      console.log('token', response);
+      await login(email, password);
 
       navigate('/dashboard');
     }

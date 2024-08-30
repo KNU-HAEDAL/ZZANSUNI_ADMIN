@@ -2,10 +2,15 @@ import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {UserInfoModel} from "@/api/user/user.response.ts";
 import {ApiError} from "@/api/ApiError.ts";
 import {getUserInfo} from "@/api/user/user.api.ts";
+import {emailLogin} from "@/api/auth/auth.api.ts";
+import secureLocalStorage from "react-secure-storage";
+import {ACCESS_TOKEN, REFRESH_TOKEN} from "@/const/data.ts";
+import {LoginResponse} from "@/api/auth/auth.response.ts";
 
 export interface UserState {
   user?: UserInfoModel;
   error: ApiError | null;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -35,11 +40,32 @@ export function useUserState(): UserState {
       });
     }
   });
+  const loginMutation = useMutation<
+    LoginResponse,
+    ApiError,
+    {email: string, password: string},
+    LoginResponse
+  >({
+    mutationFn: async ({email, password}) => {
+      return await emailLogin({email, password});
+    },
+    onSuccess: async (response) => {
+      secureLocalStorage.setItem(ACCESS_TOKEN, response.accessToken);
+      secureLocalStorage.setItem(REFRESH_TOKEN, response.refreshToken);
+      await queryClient.setQueryData(['userInfo'], response.userInfo);
+      return response;
+    }
+  });
+
 
   return {
     user: data,
     logout: () => {
       userMutation.mutate();
+    },
+    login: async (email: string, password: string) => {
+      await loginMutation.mutateAsync({email, password});
+      return
     },
     error: error,
   };
