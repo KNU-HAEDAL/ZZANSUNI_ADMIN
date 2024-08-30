@@ -53,6 +53,7 @@ module.exports = {
         },
         // 커스텀 색상 추가 목록
         'bgGrey': '#1c1c1c',
+        'bg-white1': '#e3e3e3',
         'buttonGreen' : '#38996b',
         'buttonGreenBorder': '#3ecf8e'
       },

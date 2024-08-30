@@ -2,9 +2,10 @@ import axios from "axios";
 import secureLocalStorage from "react-secure-storage";
 import {ApiResponse} from "@/api/ApiResonpse.ts";
 import {ApiError} from "@/api/ApiError.ts";
+import {API_BASE_URL} from "@/const/data.ts";
 
 export const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
     'Cross-Control-Allow-Origin': '*',
@@ -31,7 +32,8 @@ axiosClient.interceptors.response.use(
     if(apiResponse.result === 'FAIL') {
       throw new ApiError({
         errorCode: apiResponse.errorCode,
-        message: apiResponse.message
+        message: apiResponse.message,
+        statusCode: response.status
       })
     }
     return {
@@ -47,7 +49,7 @@ axiosClient.interceptors.response.use(
       if (!refreshToken) {
         return Promise.reject(error);
       }
-      const resp = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/refresh`, {
+      const resp = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +75,8 @@ axiosClient.interceptors.response.use(
     if(resBody.result === 'FAIL') {
       throw new ApiError({
         errorCode: resBody.errorCode,
-        message: resBody.message
+        message: resBody.message,
+        statusCode: error.response.status
       })
     }
     return Promise.reject(error);

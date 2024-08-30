@@ -5,7 +5,7 @@ import BackButton from "../../../components/main/BackButton.tsx";
 import secureLocalStorage from "react-secure-storage";
 import {emailLogin} from "@/api/auth/auth.api.ts";
 import {ApiError} from "@/api/ApiError.ts";
-import {KAKAO_AUTH_URL, NAVER_AUTH_URL} from "@/const/data.ts";
+import {API_BASE_URL, KAKAO_AUTH_URL, NAVER_AUTH_URL} from "@/const/data.ts";
 
 
 export default function LoginModal() {
@@ -22,6 +22,7 @@ export default function LoginModal() {
     e.preventDefault();
     setMessage('');
     try {
+      console.log(`${API_BASE_URL} is api`)
       const response = await emailLogin({email, password});
       console.log('token', response);
       secureLocalStorage.setItem('accessToken', response.accessToken);
