@@ -2,6 +2,7 @@ import {Outlet, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import secureLocalStorage from "react-secure-storage";
 import {useUserState} from "@/hooks/userState.ts";
+import {ROUTE_PATH} from "@/const/data.ts";
 
 export default function DashboardLayout() {
   const nav = useNavigate();
@@ -9,11 +10,11 @@ export default function DashboardLayout() {
 
   useEffect(() => {
     if(secureLocalStorage.getItem('accessToken') === null) {
-      nav('/login');
+      nav(ROUTE_PATH.LOGIN);
       return;
     }
     if(user && user.id <0){//TODO 어드민이 아닐때, 권한 검사
-      nav('/');
+      nav(ROUTE_PATH.ROOT);
       return;
     }
   }, []);
@@ -21,7 +22,7 @@ export default function DashboardLayout() {
   useEffect(() => {
     if(error != null) {
       console.log(error, 'goto login');
-      nav('/login');
+      nav(ROUTE_PATH.LOGIN);
     }
   }, [error]);
 

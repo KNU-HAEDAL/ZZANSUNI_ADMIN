@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useUserState} from "@/hooks/userState.ts";
-import {API_BASE_URL, KAKAO_AUTH_URL, NAVER_AUTH_URL} from "@/const/data.ts";
+import {API_BASE_URL, KAKAO_AUTH_URL, NAVER_AUTH_URL, ROUTE_PATH} from "@/const/data.ts";
 import {ApiError} from "@/api/ApiError.ts";
 
 
@@ -26,7 +26,7 @@ export default function LoginPage() {
       console.log(`${API_BASE_URL} is api`)
       await login({email, password});
 
-      navigate('/dashboard');
+      navigate(ROUTE_PATH.DASHBOARD_HOME);
     } catch (err) {
       console.error(err);
       if (err instanceof ApiError) {
