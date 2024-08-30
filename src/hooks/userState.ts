@@ -2,7 +2,7 @@ import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {UserInfoModel} from "@/api/user/user.response.ts";
 import {ApiError} from "@/api/ApiError.ts";
 import {getUserInfo} from "@/api/user/user.api.ts";
-import {emailLogin} from "@/api/auth/auth.api.ts";
+import {emailLogin, logout as logoutApi} from "@/api/auth/auth.api.ts";
 import secureLocalStorage from "react-secure-storage";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "@/const/data.ts";
 import {LoginResponse} from "@/api/auth/auth.response.ts";
@@ -36,9 +36,7 @@ export function useUserState(): UserState {
   //3. mutationFn에 전달되는 데이터의 타입(onSuccess, onError, onMutate, onSettled)
   //4. onMutate에서 반환되는 데이터의 타입. (onSuccess, onError, onSettled)에서 활용
   const userMutation = useMutation<void>({
-    mutationFn: async () => {
-      console.log('mutationFn');
-    },
+    mutationFn: logoutApi,
     onSuccess: async () => {
       console.log('onSettled');
       queryClient.removeQueries({
