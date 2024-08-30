@@ -26,6 +26,10 @@ export default function DashboardLayout() {
     }
   }, [error]);
 
+  if(!user) {
+    return (<></>);
+  }
+
 
   return (
     <div className="w-full h-full">
