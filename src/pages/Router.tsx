@@ -6,6 +6,7 @@ import ChallengeGroupPage from "@/pages/dashboard/ChallengeGroupPage.tsx";
 import DashboardLayout from "@/pages/dashboard/DashboardLayout.tsx";
 import RootLayout from "@/pages/RootLayout.tsx";
 import MyPage from "@/pages/dashboard/MyPage.tsx";
+import ManageAccountPage from "@/pages/dashboard/ManageAccountPage.tsx";
 
 
 const router = createBrowserRouter([
@@ -16,7 +17,8 @@ const router = createBrowserRouter([
         children: [
           {path: "", element: <DashboardPage/>},
           {path: "challenge-group", element: <ChallengeGroupPage/>},
-          {path:"my", element:<MyPage/>}
+          {path:"my", element:<MyPage/>},
+          {path: "manage-account", element: <ManageAccountPage/>},
         ],
       },
       {path: "login", element: <LoginPage/>},

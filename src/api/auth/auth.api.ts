@@ -21,6 +21,6 @@ export async function logout() {
 }
 
 export async function createManager(req: CreateManagerRequest) {
-  await axiosClient.post('/api/auth/manager', req);
+  await axiosClient.post('/api/admin/auth/manager', req);
   return;
 }

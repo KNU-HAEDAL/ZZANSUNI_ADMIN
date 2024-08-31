@@ -16,5 +16,6 @@ export const ROUTE_PATH = {
   DASHBOARD_HOME: "/dashboard",
   DASHBOARD_CHALLENGE_GROUP: "/dashboard/challenge-group",
   DASHBOARD_MY: "/dashboard/my",
+  DASHBOARD_MANAGE_ACCOUNT: "/dashboard/manage-account",
   LOGIN: "/login",
 };

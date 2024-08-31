@@ -8,6 +8,7 @@ const menuItems = [
   {label: '대시보드', href: ROUTE_PATH.DASHBOARD_HOME},
   {label: '챌린지 그룹', href: ROUTE_PATH.DASHBOARD_CHALLENGE_GROUP},
   {label: '챌린지 리뷰', href: ROUTE_PATH.DASHBOARD_CHALLENGE_GROUP},
+  {label: '계정 관리', href: ROUTE_PATH.DASHBOARD_MANAGE_ACCOUNT},
   {label: '마이페이지', href: ROUTE_PATH.DASHBOARD_MY},
 ]
 
@@ -31,7 +32,7 @@ export default function RootHeader() {
         </Link>
 
         <div className="w-[80px]"></div>
-        <nav className="flex justify-between h-[27px] w-[400px]">
+        <nav className="flex justify-between h-[27px] w-[500px]">
           {menuItems.map((item, index) => (
             <MenuLink key={index} user={user} item={item} index={index} clickedWhenNotLogin={clickedWhenNotLogin}/>
           ))}
