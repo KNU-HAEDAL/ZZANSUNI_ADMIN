@@ -6,11 +6,12 @@ import {Category, ChallengeGroupPagingParams} from "@/api/challenge-group/challe
 import {ApiError} from "@/api/ApiError.ts";
 import {useLocation} from "react-router-dom";
 import {CHALLENGE_GROUP} from "@/const/query.key.ts";
+import {PaginationBottomButtonGroup} from "@/components/PaginationBottomButtonGroup.tsx";
 
 function usePageParams(): ChallengeGroupPagingParams{
   const {search} = useLocation();
   const searchParams = new URLSearchParams(search);
-  const page = searchParams.get('p') ? parseInt(searchParams.get('p')!) : 0;
+  const page = searchParams.get('p') ? parseInt(searchParams.get('p')!) : 1;
   const size = searchParams.get('s') ? parseInt(searchParams.get('s')!) : 20;
   const category = searchParams.get('c') as Category
   return {
@@ -19,21 +20,42 @@ function usePageParams(): ChallengeGroupPagingParams{
     category
   }
 }
+interface ChallengeGroupPagingProps {
+  content: ChallengeGroupModel[] | undefined;
+  totalPage: number | undefined;
+  isLoading: boolean;
+}
+function useChallengeGroupPaging() :ChallengeGroupPagingProps{
+  const pagingReq = usePageParams();
+  const convertedPagingReq = {
+    ...pagingReq,
+    page: pagingReq.page-1,
+  }
+
+  const {data, isLoading} =  useQuery<
+    PagingResponse<ChallengeGroupModel>,
+    ApiError,
+    PagingResponse<ChallengeGroupModel>,
+    [_0: string, _1: ChallengeGroupPagingParams]
+  >({
+    queryKey: [CHALLENGE_GROUP, convertedPagingReq],
+    queryFn: getChallengeGroupPagingFn,
+  });
+
+  return {
+    content: data?.data,
+    totalPage: data?.totalPage,
+    isLoading,
+  }
+}
+
 
 
 export default function ChallengeGroupPage() {
 
   const pagingReq: ChallengeGroupPagingParams = usePageParams();
 
-  const {data} = useQuery<
-    PagingResponse<ChallengeGroupModel>,
-    ApiError,
-    PagingResponse<ChallengeGroupModel>,
-    [_0: string, _1: ChallengeGroupPagingParams]
-  >({
-    queryKey: [CHALLENGE_GROUP, pagingReq],
-    queryFn: getChallengeGroupPagingFn,
-  });
+  const {content, totalPage} = useChallengeGroupPaging();
 
 
   return (
@@ -42,14 +64,21 @@ export default function ChallengeGroupPage() {
         챌린지 그룹
       </div>
       <div>
-
         {
-          data?.data.map((challengeGroup) => (
+          content?.map((challengeGroup) => (
             <div key={challengeGroup.id}>
               <ChallengeGroupItem challengeGroup={challengeGroup}/>
             </div>
           ))
         }
+      </div>
+      <div>
+        <PaginationBottomButtonGroup
+          currentPage={pagingReq.page}
+          size={pagingReq.size}
+          totalPage = {totalPage ?? 1}
+          condition={[]}
+        />
       </div>
     </div>
   );
