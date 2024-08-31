@@ -63,6 +63,7 @@ export default function ChallengeGroupPage() {
             condition={condition}
             prefetchFn={prefetchFn}
           />
+          <div className="h-4"/>
         </div>
       </Suspense>
     </ErrorBoundary>
