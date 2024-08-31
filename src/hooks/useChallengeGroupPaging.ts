@@ -5,7 +5,7 @@ import {useSuspenseQuery} from "@tanstack/react-query";
 import {PagingResponse} from "@/api/ApiResonpse.ts";
 import {ApiError} from "@/api/ApiError.ts";
 import {CHALLENGE_GROUP} from "@/const/query.key.ts";
-import {getChallengeGroupPagingFn} from "@/api/challenge-group/challenge.group.api.ts";
+import {getChallengeGroupPaging} from "@/api/challenge-group/challenge.group.api.ts";
 import {useEffect} from "react";
 
 
@@ -20,7 +20,7 @@ interface ChallengeGroupPagingProps {
 
 export function useChallengeGroupPaging(): ChallengeGroupPagingProps {
   const [searchParams, setSearchParams] = useSearchParams();
-  const pagingReq=  {
+  const pagingReq = {
     page: searchParams.get('p') ? parseInt(searchParams.get('p')!) : 1,
     size: searchParams.get('s') ? parseInt(searchParams.get('s')!) : 20,
     category: searchParams.get('c') as Category ?? undefined,
@@ -38,15 +38,15 @@ export function useChallengeGroupPaging(): ChallengeGroupPagingProps {
     [_0: string, _1: ChallengeGroupPagingParams]
   >({
     queryKey: [CHALLENGE_GROUP, convertedPagingReq],
-    queryFn: getChallengeGroupPagingFn,
+    queryFn: () => getChallengeGroupPaging(convertedPagingReq),
     staleTime: 1000 * 60 * 5
   });
 
 
   useEffect(() => {
     searchParams.forEach((value, key) => {
-      if(key === 'c') {
-        if(!['HEALTH', 'ECHO', 'SHARE', 'VOLUNTEER', 'ETC'].includes(value)){
+      if (key === 'c') {
+        if (!['HEALTH', 'ECHO', 'SHARE', 'VOLUNTEER', 'ETC'].includes(value)) {
           alert('존재하지 않는 카테고리입니다. 전체로 초기화 합니다.');
           setSearchParams((prev) => {
             return {
@@ -55,8 +55,8 @@ export function useChallengeGroupPaging(): ChallengeGroupPagingProps {
             }
           }, {replace: true});
         }
-      }else if(key === 'p') {
-        if(parseInt(value) < 1){
+      } else if (key === 'p') {
+        if (parseInt(value) < 1) {
           alert('페이지는 1 이상이어야 합니다. 1로 초기화 합니다.');
           setSearchParams((prev) => {
             return {
@@ -65,9 +65,9 @@ export function useChallengeGroupPaging(): ChallengeGroupPagingProps {
             }
           }, {replace: true});
         }
-      }else if(key === 's') {
+      } else if (key === 's') {
         const size = parseInt(value);
-        if(size < 1 || size > 100){
+        if (size < 1 || size > 100) {
           alert('페이지 크기는 1~100 사이여야 합니다. 20으로 초기화 합니다.');
           setSearchParams((prev) => {
             return {
