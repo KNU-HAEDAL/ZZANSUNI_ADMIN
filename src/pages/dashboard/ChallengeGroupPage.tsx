@@ -9,6 +9,8 @@ import {CHALLENGE_GROUP} from "@/const/query.key.ts";
 import {PaginationBottomButtonGroup} from "@/components/PaginationBottomButtonGroup.tsx";
 import {useState} from "react";
 import {SelectCategory} from "@/pages/dashboard/component/SelectCategory.tsx";
+import {ChallengeGroupTable} from "@/pages/dashboard/component/ChallengeGroupTable.tsx";
+
 
 function usePageParams(): ChallengeGroupPagingParams{
   const {search} = useLocation();
@@ -81,8 +83,8 @@ export default function ChallengeGroupPage() {
 
   return (
     <div className="w-full h-full">
-      <div>
-        챌린지 그룹
+      <div className="font-normal px-4 pb-4 text-[18px]">
+        챌린지 그룹 목록
       </div>
       <div className="w-[300px] px-4">
         <SelectCategory selectedCategory={selectedCategory} setSelectedCategory={handleCategoryChange}/>
@@ -95,51 +97,6 @@ export default function ChallengeGroupPage() {
           totalPage = {totalPage ?? 1}
           condition={condition}
         />
-      </div>
-    </div>
-  );
-}
-
-function ChallengeGroupTable({challengeGroups}: {challengeGroups: ChallengeGroupModel[]}){
-  return (
-    <div>
-      {
-        challengeGroups.map((challengeGroup) => (
-          <div key={challengeGroup.id}>
-            <ChallengeGroupItem challengeGroup={challengeGroup}/>
-          </div>
-        ))
-      }
-    </div>
-  )
-}
-
-
-const ChallengeGroupItem = ({challengeGroup}: {
-  challengeGroup: ChallengeGroupModel
-}) => {
-  return (
-    <div className="flex flex-row border m-4">
-      <div>
-        id: {challengeGroup.id}
-      </div>
-      <div>
-        제목 :{challengeGroup.title}
-      </div>
-      <div className="border w-5/6">
-        내용 :{challengeGroup.content}
-      </div>
-      <div>
-        카테고리 :{challengeGroup.category}
-      </div>
-      <div>
-        {challengeGroup.startDate}
-      </div>
-      <div>
-        {challengeGroup.endDate}
-      </div>
-      <div>
-        {challengeGroup.participantCount}
       </div>
     </div>
   );
