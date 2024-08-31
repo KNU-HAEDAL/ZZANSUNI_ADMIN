@@ -33,7 +33,7 @@ export default function RootHeader() {
         <div className="w-[80px]"></div>
         <nav className="flex justify-between h-[27px] w-[400px]">
           {menuItems.map((item, index) => (
-            <MenuLink user={user} item={item} index={index} clickedWhenNotLogin={clickedWhenNotLogin}/>
+            <MenuLink key={index} user={user} item={item} index={index} clickedWhenNotLogin={clickedWhenNotLogin}/>
           ))}
         </nav>
         <div className="flex-grow"/>
