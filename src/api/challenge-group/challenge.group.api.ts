@@ -25,7 +25,7 @@ export const getChallengeGroupPagingFn: QueryFunction<
   return await getChallengeGroupPaging(req);
 }
 
-async function getChallengeGroupPaging(params: ChallengeGroupPagingParams): Promise<PagingResponse<ChallengeGroupModel>> {
+export async function getChallengeGroupPaging(params: ChallengeGroupPagingParams): Promise<PagingResponse<ChallengeGroupModel>> {
   const res = await axiosClient.get('/api/challengeGroups',
     {
       params: {

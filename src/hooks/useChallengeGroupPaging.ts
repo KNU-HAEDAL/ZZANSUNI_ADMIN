@@ -1,7 +1,7 @@
 import {Category, ChallengeGroupPagingParams} from "@/api/challenge-group/challenge.group.request.ts";
 import {useSearchParams} from "react-router-dom";
 import {ChallengeGroupModel} from "@/api/challenge-group/challenge.group.response.ts";
-import {useQuery} from "@tanstack/react-query";
+import {useSuspenseQuery} from "@tanstack/react-query";
 import {PagingResponse} from "@/api/ApiResonpse.ts";
 import {ApiError} from "@/api/ApiError.ts";
 import {CHALLENGE_GROUP} from "@/const/query.key.ts";
@@ -31,7 +31,7 @@ export function useChallengeGroupPaging(): ChallengeGroupPagingProps {
     page: pagingReq.page - 1,
   }
 
-  const {data, isLoading} = useQuery<
+  const {data, isLoading} = useSuspenseQuery<
     PagingResponse<ChallengeGroupModel>,
     ApiError,
     PagingResponse<ChallengeGroupModel>,
@@ -39,6 +39,7 @@ export function useChallengeGroupPaging(): ChallengeGroupPagingProps {
   >({
     queryKey: [CHALLENGE_GROUP, convertedPagingReq],
     queryFn: getChallengeGroupPagingFn,
+    staleTime: 1000 * 60 * 5
   });
 
 

@@ -7,13 +7,15 @@ import {
   PaginationPrevious
 } from "@/components/ui/pagination.tsx";
 import {useNavigate} from "react-router-dom";
+import {useTransition} from "react";
 
 
-export function PaginationBottomButtonGroup({ currentPage, size, totalPage, condition }: {
+export function PaginationBottomButtonGroup({ currentPage, size, totalPage, condition, prefetchFn }: {
   currentPage: number,
   size: number,
   totalPage: number,
   condition: string[]
+  prefetchFn: (href:string) => void
 }) {
   const maxVisiblePages = 5;
 
@@ -26,12 +28,15 @@ export function PaginationBottomButtonGroup({ currentPage, size, totalPage, cond
 
   const conditionQuery = condition.map((c) => `&${c}`).join('');
 
+  const transition = useTransition()[1];
+
   const onLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const href = e.currentTarget.getAttribute('href');
-    if (href) {
-      navigate(href);
-    }
+    const href = e.currentTarget.getAttribute('href')!;
+    prefetchFn(href);
+    transition(() =>
+      navigate(href)
+    );
   }
 
   return (
