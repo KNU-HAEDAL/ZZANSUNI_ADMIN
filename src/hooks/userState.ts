@@ -35,7 +35,7 @@ export function useUserState(): UserState {
   //2. 실패 시 반환되는 에러의 타입
   //3. mutationFn에 전달되는 데이터의 타입(onSuccess, onError, onMutate, onSettled)
   //4. onMutate에서 반환되는 데이터의 타입. (onSuccess, onError, onSettled)에서 활용
-  const userMutation = useMutation<void>({
+  const logoutMutation = useMutation<void>({
     mutationFn: logoutApi,
     onSuccess: async () => {
       console.log('onSettled');
@@ -63,7 +63,7 @@ export function useUserState(): UserState {
 
   return {
     user: data,
-    logout: userMutation.mutateAsync,
+    logout: logoutMutation.mutateAsync,
     login: async (req:EmailLoginRequest) => {
       await loginMutation.mutateAsync(req);
     },
