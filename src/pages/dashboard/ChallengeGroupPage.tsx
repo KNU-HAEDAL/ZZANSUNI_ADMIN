@@ -4,16 +4,18 @@ import {PagingResponse} from "@/api/ApiResonpse.ts";
 import {ChallengeGroupModel} from "@/api/challenge-group/challenge.group.response.ts";
 import {Category, ChallengeGroupPagingParams} from "@/api/challenge-group/challenge.group.request.ts";
 import {ApiError} from "@/api/ApiError.ts";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {CHALLENGE_GROUP} from "@/const/query.key.ts";
 import {PaginationBottomButtonGroup} from "@/components/PaginationBottomButtonGroup.tsx";
+import {useState} from "react";
+import {SelectCategory} from "@/pages/dashboard/component/SelectCategory.tsx";
 
 function usePageParams(): ChallengeGroupPagingParams{
   const {search} = useLocation();
   const searchParams = new URLSearchParams(search);
   const page = searchParams.get('p') ? parseInt(searchParams.get('p')!) : 1;
   const size = searchParams.get('s') ? parseInt(searchParams.get('s')!) : 20;
-  const category = searchParams.get('c') as Category
+  const category = searchParams.get('c') as Category ?? undefined;
   return {
     page,
     size,
@@ -21,8 +23,11 @@ function usePageParams(): ChallengeGroupPagingParams{
   }
 }
 interface ChallengeGroupPagingProps {
-  content: ChallengeGroupModel[] | undefined;
-  totalPage: number | undefined;
+  page: number;
+  size: number;
+  category?: Category;
+  content?: ChallengeGroupModel[];
+  totalPage?: number;
   isLoading: boolean;
 }
 function useChallengeGroupPaging() :ChallengeGroupPagingProps{
@@ -43,6 +48,9 @@ function useChallengeGroupPaging() :ChallengeGroupPagingProps{
   });
 
   return {
+    page: pagingReq.page,
+    size: pagingReq.size,
+    category: pagingReq.category,
     content: data?.data,
     totalPage: data?.totalPage,
     isLoading,
@@ -52,37 +60,60 @@ function useChallengeGroupPaging() :ChallengeGroupPagingProps{
 
 
 export default function ChallengeGroupPage() {
+  const { content, totalPage, page, size, category} = useChallengeGroupPaging();
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(category);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const pagingReq: ChallengeGroupPagingParams = usePageParams();
+  function handleCategoryChange(category?: string) {
+    setSelectedCategory(category);
+    const searchParams = new URLSearchParams(location.search);
 
-  const {content, totalPage} = useChallengeGroupPaging();
-
+    if (category && category !== 'ALL') {
+      searchParams.set('c', category);
+      searchParams.set('p', '1');
+    } else {
+      searchParams.delete('c');
+    }
+    navigate({search: searchParams.toString()}, {replace: true});
+  }
+  const condition = (selectedCategory && selectedCategory !== 'ALL') ? [`c=${selectedCategory}`] : [];
 
   return (
     <div className="w-full h-full">
       <div>
         챌린지 그룹
       </div>
-      <div>
-        {
-          content?.map((challengeGroup) => (
-            <div key={challengeGroup.id}>
-              <ChallengeGroupItem challengeGroup={challengeGroup}/>
-            </div>
-          ))
-        }
+      <div className="w-[300px] px-4">
+        <SelectCategory selectedCategory={selectedCategory} setSelectedCategory={handleCategoryChange}/>
       </div>
+      <ChallengeGroupTable challengeGroups={content ?? []}/>
       <div>
         <PaginationBottomButtonGroup
-          currentPage={pagingReq.page}
-          size={pagingReq.size}
+          currentPage={page}
+          size={size}
           totalPage = {totalPage ?? 1}
-          condition={[]}
+          condition={condition}
         />
       </div>
     </div>
   );
 }
+
+function ChallengeGroupTable({challengeGroups}: {challengeGroups: ChallengeGroupModel[]}){
+  return (
+    <div>
+      {
+        challengeGroups.map((challengeGroup) => (
+          <div key={challengeGroup.id}>
+            <ChallengeGroupItem challengeGroup={challengeGroup}/>
+          </div>
+        ))
+      }
+    </div>
+  )
+}
+
 
 const ChallengeGroupItem = ({challengeGroup}: {
   challengeGroup: ChallengeGroupModel
