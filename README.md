@@ -1,30 +1,58 @@
-# React + TypeScript + Vite
+# ZZANSUNI ADMIN
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+짠수니 서비스의 관리자 BACK OFFICE 프로젝트
 
-Currently, two official plugins are available:
+## 개발환경
+- **React**
+- **Typescript**
+- **React-Query** (서버와의 비동기 통신 및 캐싱, 사버 상태 관리)
+- **Zustand** (클라이언트 상태 관리)
+- **Axios** (HTTP 클라이언트)
+- **TailwindCSS** (유틸리티 퍼스트 CSS 프레임워크)
+- **Shadcn** (UI 컴포넌트 라이브러리)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 프로젝트 구조 및 가이드
 
-## Expanding the ESLint configuration
+### `api`
+- **역할**: 서버와의 API 요청 및 응답 관리
+- **구조**:
+    - `request`와 `response`의 타입을 정의
+    - 응답 타입은 `xxResponse` 또는 `xxModel`로 명명
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### `components`
+- **역할**: 모든 페이지에서 공통적으로 사용되는 UI 컴포넌트 모음
+- **구조**:
+    - 재사용 가능한 컴포넌트를 정의
 
-- Configure the top-level `parserOptions` property like this:
+### `const`
+- **역할**: 하드코딩을 피하기 위한 상수 정의
+- **구조**:
+    - 경로, API Key, 설정 값 등
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+### `hooks`
+- **역할**: 커스텀 훅 정의 및 상태 관리
+- **구조**:
+    - 서버와 클라이언트 액션을 추상화하여 뷰 모델 역할을 수행
+    - 복잡한 상태 관리 로직을 분리하여 컴포넌트의 복잡성을 낮춤
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### `pages`
+- **역할**: 각 페이지를 정의하고 관리
+- **구조**:
+    - 복잡한 상태 관리는 `hooks`에서 처리
+    - 간단한 상태 관리는 페이지 내부 컴포넌트에서 처리
+    - 페이지에 종속적인 컴포넌트는 페이지 내부에 정의
+
+### `util`
+- **역할**: 공통적으로 사용되는 유틸리티 함수 모음
+- **구조**:
+    - 특정 페이지에 종속적인 함수는 해당 페이지 내부에 정의
+    - 범용적으로 사용되는 함수는 여기에서 관리
+
+## 코드 스타일 및 컨벤션
+- **파일 네이밍**: 소문자와 하이픈(-), 점(.)을 사용하여 파일 및 디렉토리 명명 (`challenge-group.ts` or `user.store.ts`)
+- **컴포넌트 네이밍**: 파스칼 케이스를 사용하여 컴포넌트 명명 (`ChallengeGroup.tsx`)
+- **상수 네이밍**: 대문자와 언더스코어(_)를 사용하여 상수 명명 (`API_KEY`)
+- **타입 네이밍**: 파스칼 케이스를 사용하여 타입 명명 (`ChallengeGroupModel`)
+- **함수 네이밍**: 카멜 케이스를 사용하여 함수 명명 (`fetchChallengeGroup`)
+- **변수 네이밍**: 카멜 케이스를 사용하여 변수 명명 (`challengeGroupList`)
+
