@@ -1,24 +1,40 @@
 import {Category} from "@/api/challenge-group/challenge.group.request.ts";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
+import {useSearchParams} from "react-router-dom";
 
-export function CategorySelector({selectedCategory, setSelectedCategory}: {
-  selectedCategory?: string;
-  setSelectedCategory: (category?: string) => void;
-}) {
+export function CategorySelector() {
   const categories: Category[] = ['HEALTH', 'ECHO', 'SHARE', 'VOLUNTEER', 'ETC'];
-  console.log('selectedCategory', selectedCategory)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentCategory = searchParams.get('c') ?? 'ALL';
+
   const handleValueChange = (value: string) => {
-    setSelectedCategory(value);
+    if (value !== 'ALL') {
+      setSearchParams((prev) => {
+        return {
+          ...prev,
+          c: value,
+          p: '1',
+        }
+      });
+    } else {
+      setSearchParams((prev) => {
+        return {
+          p: prev.get('p') ?? '1',
+          s: prev.get('s') ?? '20',
+        }
+      });
+    }
   }
 
+
   return (
-    <Select value={selectedCategory} onValueChange={handleValueChange}>
+    <Select value={currentCategory} onValueChange={handleValueChange}>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="카테고리 선택"/>
       </SelectTrigger>
       <SelectContent>
         <SelectItem value={'ALL'}>
-          {'전체'}
+          전체
         </SelectItem>
         {categories.map((category) => (
           <SelectItem key={category} value={category}>
