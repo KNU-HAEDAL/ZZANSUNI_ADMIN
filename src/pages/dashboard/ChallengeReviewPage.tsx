@@ -25,7 +25,6 @@ export function ChallengeReviewPage() {
             size={size}
             totalPage={totalPage ?? 1}
             condition={[]}
-            prefetchFn={() => {}}
           />
           <div className="h-4"/>
         </div>
