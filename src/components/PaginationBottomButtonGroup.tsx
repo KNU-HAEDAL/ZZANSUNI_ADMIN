@@ -6,6 +6,7 @@ import {
   PaginationLink, PaginationNext,
   PaginationPrevious
 } from "@/components/ui/pagination.tsx";
+import {useNavigate} from "react-router-dom";
 
 
 export function PaginationBottomButtonGroup({ currentPage, size, totalPage, condition }: {
@@ -21,8 +22,17 @@ export function PaginationBottomButtonGroup({ currentPage, size, totalPage, cond
 
   const prevPageBtnNumber = Math.max(currentPage - 1, 1);
   const nextPageBtnNumber = Math.min(currentPage + 1, totalPage);
+  const navigate = useNavigate();
 
   const conditionQuery = condition.map((c) => `&${c}`).join('');
+
+  const onLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const href = e.currentTarget.getAttribute('href');
+    if (href) {
+      navigate(href);
+    }
+  }
 
   return (
     <Pagination>
@@ -30,6 +40,7 @@ export function PaginationBottomButtonGroup({ currentPage, size, totalPage, cond
         <PaginationItem>
           <PaginationPrevious
             href={`?p=${prevPageBtnNumber}&s=${size}${conditionQuery}`}
+            onClick={onLinkClick}
             aria-disabled={currentPage === 1}
           />
         </PaginationItem>
@@ -37,7 +48,10 @@ export function PaginationBottomButtonGroup({ currentPage, size, totalPage, cond
         {startPage > 1 && (
           <>
             <PaginationItem>
-              <PaginationLink href={`?p=1&s=${size}${conditionQuery}`}>1</PaginationLink>
+              <PaginationLink
+                href={`?p=1&s=${size}${conditionQuery}`}
+                onClick={onLinkClick}
+              >1</PaginationLink>
             </PaginationItem>
             {startPage > 2 && <PaginationEllipsis />}
           </>
@@ -49,6 +63,7 @@ export function PaginationBottomButtonGroup({ currentPage, size, totalPage, cond
             <PaginationItem key={pageNum}>
               <PaginationLink
                 href={`?p=${pageNum}&s=${size}${conditionQuery}`}
+                onClick={onLinkClick}
                 isActive={currentPage === pageNum}
               >
                 {pageNum}
@@ -61,7 +76,10 @@ export function PaginationBottomButtonGroup({ currentPage, size, totalPage, cond
           <>
             {endPage < totalPage - 1 && <PaginationEllipsis />}
             <PaginationItem>
-              <PaginationLink href={`?p=${totalPage}&s=${size}${conditionQuery}`}>{totalPage}</PaginationLink>
+              <PaginationLink
+                href={`?p=${totalPage}&s=${size}${conditionQuery}`}
+                onClick={onLinkClick}
+              >{totalPage}</PaginationLink>
             </PaginationItem>
           </>
         )}
@@ -69,6 +87,7 @@ export function PaginationBottomButtonGroup({ currentPage, size, totalPage, cond
         <PaginationItem>
           <PaginationNext
             href={`?p=${nextPageBtnNumber}&s=${size}${conditionQuery}`}
+            onClick={onLinkClick}
             aria-disabled={currentPage === totalPage}
           />
         </PaginationItem>
