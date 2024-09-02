@@ -4,9 +4,31 @@ import {ChallengeGroupTable} from "@/pages/dashboard/component/ChallengeGroupTab
 import {useChallengeGroupPaging} from "@/hooks/useChallengeGroupPaging.ts";
 import {Suspense, useEffect} from "react";
 import {ErrorBoundary} from "react-error-boundary";
+import DelayedLoadingSpinner from "@/components/DelayedLoadingSpinner.tsx";
 
 
 export default function ChallengeGroupPage() {
+
+
+  return (
+    <div className="w-full h-full">
+      <div className="font-normal px-4 pb-4 text-[18px]">
+        챌린지 그룹 목록
+      </div>
+      <div className="w-[300px] px-4">
+        <CategorySelector/>
+      </div>
+      <ErrorBoundary fallback={<div>Error!</div>}>
+        <Suspense fallback={<DelayedLoadingSpinner/>}>
+          <ChallengeGroupInnerContent/>
+        </Suspense>
+      </ErrorBoundary>
+    </div>
+  );
+}
+
+
+function ChallengeGroupInnerContent() {
   const {content, totalPage, page, size, category} = useChallengeGroupPaging();
 
 
@@ -16,28 +38,16 @@ export default function ChallengeGroupPage() {
     window.scrollTo(0, 0);
   }, [page, size, category]);
 
-
-
   return (
-    <ErrorBoundary fallback={<div>Error!</div>}>
-      <Suspense fallback={"loading.."}>
-        <div className="w-full h-full">
-          <div className="font-normal px-4 pb-4 text-[18px]">
-            챌린지 그룹 목록
-          </div>
-          <div className="w-[300px] px-4">
-            <CategorySelector/>
-          </div>
-          <ChallengeGroupTable challengeGroups={content ?? []}/>
-          <PaginationBottomButtonGroup
-            currentPage={page}
-            size={size}
-            totalPage={totalPage ?? 1}
-            condition={condition}
-          />
-          <div className="h-4"/>
-        </div>
-      </Suspense>
-    </ErrorBoundary>
+    <>
+      <ChallengeGroupTable challengeGroups={content ?? []}/>
+      <PaginationBottomButtonGroup
+        currentPage={page}
+        size={size}
+        totalPage={totalPage ?? 1}
+        condition={condition}
+      />
+      <div className="h-4"/>
+    </>
   );
 }
