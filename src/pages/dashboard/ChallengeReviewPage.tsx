@@ -31,11 +31,11 @@ function ReviewInnerContent() {
 
   return (
     <>
-      <ChallengeReviewTable challengeReviews={content ?? []}/>
+      <ChallengeReviewTable challengeReviews={content}/>
       <PaginationBottomButtonGroup
         currentPage={page}
         size={size}
-        totalPage={totalPage ?? 1}
+        totalPage={totalPage}
         condition={[]}
       />
       <div className="h-4"/>

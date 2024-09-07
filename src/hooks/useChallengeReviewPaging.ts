@@ -12,9 +12,8 @@ import {getChallengeReviewPaging} from "@/api/challenge-review/challenge.review.
 interface ChallengeReviewPagingProps {
   page: number;
   size: number;
-  content?: ChallengeReviewModel[];
-  totalPage?: number;
-  isLoading: boolean;
+  content: ChallengeReviewModel[];
+  totalPage: number;
 }
 
 export function useChallengeReviewPaging(): ChallengeReviewPagingProps {
@@ -29,7 +28,7 @@ export function useChallengeReviewPaging(): ChallengeReviewPagingProps {
     page: pagingReq.page - 1,
   }
 
-  const {data, isLoading} = useSuspenseQuery<
+  const {data: paingRes} = useSuspenseQuery<
     PagingResponse<ChallengeReviewModel>,
     ApiError,
     PagingResponse<ChallengeReviewModel>,
@@ -71,8 +70,7 @@ export function useChallengeReviewPaging(): ChallengeReviewPagingProps {
   return {
     page: pagingReq.page,
     size: pagingReq.size,
-    content: data?.data,
-    totalPage: data?.totalPage,
-    isLoading,
+    content: paingRes.data,
+    totalPage: paingRes.totalPage,
   }
 }

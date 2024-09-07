@@ -13,9 +13,8 @@ interface ChallengeGroupPagingProps {
   page: number;
   size: number;
   category?: Category;
-  content?: ChallengeGroupModel[];
-  totalPage?: number;
-  isLoading: boolean;
+  content: ChallengeGroupModel[];
+  totalPage: number;
 }
 
 export function useChallengeGroupPaging(): ChallengeGroupPagingProps {
@@ -31,7 +30,7 @@ export function useChallengeGroupPaging(): ChallengeGroupPagingProps {
     page: pagingReq.page - 1,
   }
 
-  const {data, isLoading} = useSuspenseQuery<
+  const {data: pagingRes} = useSuspenseQuery<
     PagingResponse<ChallengeGroupModel>,
     ApiError,
     PagingResponse<ChallengeGroupModel>,
@@ -84,8 +83,7 @@ export function useChallengeGroupPaging(): ChallengeGroupPagingProps {
     page: pagingReq.page,
     size: pagingReq.size,
     category: pagingReq.category,
-    content: data?.data,
-    totalPage: data?.totalPage,
-    isLoading,
+    content: pagingRes.data,
+    totalPage: pagingRes.totalPage,
   }
 }

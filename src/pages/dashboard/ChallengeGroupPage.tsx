@@ -40,11 +40,11 @@ function ChallengeGroupInnerContent() {
 
   return (
     <>
-      <ChallengeGroupTable challengeGroups={content ?? []}/>
+      <ChallengeGroupTable challengeGroups={content}/>
       <PaginationBottomButtonGroup
         currentPage={page}
         size={size}
-        totalPage={totalPage ?? 1}
+        totalPage={totalPage}
         condition={condition}
       />
       <div className="h-4"/>
