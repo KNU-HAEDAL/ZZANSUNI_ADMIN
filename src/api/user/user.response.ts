@@ -4,6 +4,7 @@ export interface UserInfoModel {
   profileImageUrl: string;
   email: string;
   tierInfo: TierInfoModel;
+  role: 'ADMIN' | 'MANAGER' | 'USER';
 }
 
 export interface TierInfoModel {

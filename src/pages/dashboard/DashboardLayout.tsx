@@ -13,8 +13,9 @@ export default function DashboardLayout() {
       nav(ROUTE_PATH.LOGIN);
       return;
     }
-    if(user && user.id <0){//TODO 어드민이 아닐때, 권한 검사
+    if(user && user.role === 'USER'){
       nav(ROUTE_PATH.ROOT);
+      alert('권한이 없습니다.');
       return;
     }
   }, []);
