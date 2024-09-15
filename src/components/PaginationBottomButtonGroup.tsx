@@ -1,4 +1,4 @@
-import {calculateVisiblePages} from "@/util/paging.ts";
+import {calculateVisiblePages} from "@/global/util/paging.ts";
 import {
   Pagination,
   PaginationContent, PaginationEllipsis,
